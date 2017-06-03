@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1496094769 source:/home/solange/Documentos/Trabalho Pratico/Programas/DijkstraBinaryHeap/main.cpp
+	<stdio.h>
+	<stdlib.h>
+	<limits.h>
+	<string.h>
+	<time.h>
+
