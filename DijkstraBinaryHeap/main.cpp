@@ -26,7 +26,7 @@ struct Grafo
     struct ListaAdj* array;
 };
 
-// Função que cria um novo nó na lista de adjacência
+// Função que cria um novo nó na lista de adjacência do grafo direcionado
 struct VerticeListaAdj* insereVerticeListaAdj(int destino, int peso)
 {
     struct VerticeListaAdj* insereVertice = (struct VerticeListaAdj*) malloc(sizeof(struct VerticeListaAdj));
@@ -84,7 +84,7 @@ void fechaArquivo(FILE* arquivo)
 
 
 
-// Inclui uma aresta a um grafo não direcionado
+// Inclui uma aresta em no grafo (direcionado)
 void insereAresta(struct Grafo* grafo, int origem, int destino, int peso)
 {
     // Inclui uma aresta da origem ao destino. Um novo nó é adicionado à lista de adjacência
@@ -92,12 +92,6 @@ void insereAresta(struct Grafo* grafo, int origem, int destino, int peso)
     struct VerticeListaAdj* insereVertice = insereVerticeListaAdj(destino, peso);
     insereVertice->prox = grafo->array[origem].inicio;
     grafo->array[origem].inicio = insereVertice;
-
-/*    // Como o grafo é não direcionado, adiciona uma aresta do destino para a origem também
-    insereVertice = insereVerticeListaAdj(origem, peso);
-    insereVertice->prox = grafo->array[destino].inicio;
-    grafo->array[destino].inicio = insereVertice;
-*/
 }
 
 // Struct que representa o nó min da heap
@@ -180,7 +174,7 @@ void heapfyMin(struct HeapMin* heapMin, int ind)
     }
 }
 
-// Função para checar se a heap min está vazia ou não
+// Função para checar se a heap min está vazia
 int ehVazia(struct HeapMin* heapMin)
 {
     return heapMin->tamanho == 0;
@@ -319,14 +313,14 @@ void dijkstra(struct Grafo* grafo, int origem)
 
 
     FILE *arquivoSaida;
-    arquivoSaida = abreArquivo('a',"/home/solange/Documentos/Trabalho Pratico/Programas/DijkstraBinaryHeap/grafos/saidas/saida_inst_v100_s1.txt");
+    arquivoSaida = abreArquivo('a',"/home/solange/Documentos/Trabalho Pratico/TrabalhoAPA/DijkstraBinaryHeap/grafos/saidas/saida_inst_v100_s1.txt");
 
     // Imprime o tempo de execução
     fprintf(arquivoSaida, "\nTempo total de execução: %f milissegundo(s).\n\n", tempo);
 
     // Imprime as menores distâncias calculadas
     for (int i = 0; i < V; ++i)
-        fprintf(arquivoSaida, "%d \t %d\n", i+1, dist[i]);
+        fprintf(arquivoSaida, "%d \t %d\n", i, dist[i]);
 
     fechaArquivo(arquivoSaida);
 }
@@ -363,9 +357,7 @@ int main()
 	int V;
     struct Grafo* grafo = constroiGrafo(0);
 
-	arquivoEntrada = abreArquivo('l', "/home/solange/Documentos/Trabalho Pratico/Programas/DijkstraBinaryHeap/grafos/inst_v100_s1.dat");
-//	arquivoEntrada = abreArquivo('l', "/home/solange/Documentos/Trabalho Pratico/Programas/DijkstraBinaryHeap/grafos/dmxa0296.stp");
-//	arquivoSaida = abreArquivo('a',"saida.txt");
+	arquivoEntrada = abreArquivo('l', "/home/solange/Documentos/Trabalho Pratico/TrabalhoAPA/DijkstraBinaryHeap/grafos/inst_v100_s1.dat");
 
 
 	while(!feof(arquivoEntrada))
@@ -382,7 +374,6 @@ int main()
         if(strcmp(prefixo, "E") == 0){
             insereAresta(grafo, valor1, valor2, valor3);
             //fprintf(arquivoSaida, "%s %d %d %d\n", prefixo, valor1, valor2, valor3);
-            //fprintf(arquivoSaida,"%d %d %d\n", valor1, valor2, valor3);
         }
 	}
 
@@ -392,7 +383,7 @@ int main()
 //	fechaArquivo(arquivoSaida);
 
 
-    dijkstra(grafo, 1); // Executa o Dijkstra para o grafo
+    dijkstra(grafo, 0); // Executa o Dijkstra para o grafo
 
     return 0;
 }
