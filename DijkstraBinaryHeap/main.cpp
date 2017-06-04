@@ -329,24 +329,6 @@ void dijkstra(struct Grafo* grafo, int origem)
 // Programa main para testar as funções acima
 int main()
 {
-    // Grafo de teste
-/*    int V = 9;
-    struct Grafo* grafo = constroiGrafo(V);
-    insereAresta(grafo, 0, 1, 4);
-    insereAresta(grafo, 0, 7, 8);
-    insereAresta(grafo, 1, 2, 8);
-    insereAresta(grafo, 1, 7, 11);
-    insereAresta(grafo, 2, 3, 7);
-    insereAresta(grafo, 2, 8, 2);
-    insereAresta(grafo, 2, 5, 4);
-    insereAresta(grafo, 3, 4, 9);
-    insereAresta(grafo, 3, 5, 14);
-    insereAresta(grafo, 4, 5, 10);
-    insereAresta(grafo, 5, 6, 2);
-    insereAresta(grafo, 6, 7, 1);
-    insereAresta(grafo, 6, 8, 6);
-    insereAresta(grafo, 7, 8, 7); */
-
 
     // testes com arquivos
 
