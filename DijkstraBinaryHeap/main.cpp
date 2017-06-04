@@ -313,7 +313,7 @@ void dijkstra(struct Grafo* grafo, int origem)
 
 
     FILE *arquivoSaida;
-    arquivoSaida = abreArquivo('a',"/home/solange/Documentos/Trabalho Pratico/TrabalhoAPA/DijkstraBinaryHeap/grafos/saidas/saida_inst_v100_s1.txt");
+    arquivoSaida = abreArquivo('a',"/home/solange/Documentos/Trabalho Pratico/TrabalhoAPA/DijkstraBinaryHeap/saidas/saida_inst_v100_s2.txt");
 
     // Imprime o tempo de execução
     fprintf(arquivoSaida, "\nTempo total de execução: %f milissegundo(s).\n\n", tempo);
@@ -339,7 +339,7 @@ int main()
 	int V;
     struct Grafo* grafo = constroiGrafo(0);
 
-	arquivoEntrada = abreArquivo('l', "/home/solange/Documentos/Trabalho Pratico/TrabalhoAPA/DijkstraBinaryHeap/grafos/inst_v100_s1.dat");
+	arquivoEntrada = abreArquivo('l', "/home/solange/Documentos/Trabalho Pratico/TrabalhoAPA/grafos/test-set2/inst_v100_s2.dat");
 
 
 	while(!feof(arquivoEntrada))
