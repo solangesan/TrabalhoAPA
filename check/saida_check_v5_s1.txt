@@ -1,0 +1,8 @@
+
+Tempo total de execução: 1.000000 milissegundo(s).
+
+0 	 0
+1 	 5
+2 	 4
+3 	 26
+4 	 32

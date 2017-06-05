@@ -1,0 +1,13 @@
+reading file check_v5_s2.dat (5 nodes, 20 arcs)    0.000 s
+
+performing Bellman (Pape 2Queue version)    0.000 s
+SP 0 -> 4: 0 4 -> val = 27
+performing Dijkstra (MinHeap version)    0.000 s
+SP 0 -> 4: 0 4 -> val = 27
+
+shortest path tree
+root   0
+father 0	node   1	 distance     5
+father 3	node   2	 distance    33
+father 4	node   3	 distance    30
+father 0	node   4	 distance    27
