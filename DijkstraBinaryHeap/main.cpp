@@ -29,11 +29,11 @@ struct Grafo
 // Função que cria um novo nó na lista de adjacência do grafo direcionado
 struct VerticeListaAdj* insereVerticeListaAdj(int destino, int peso)
 {
-    struct VerticeListaAdj* insereVertice = (struct VerticeListaAdj*) malloc(sizeof(struct VerticeListaAdj));
-    insereVertice->destino = destino;
-    insereVertice->peso = peso;
-    insereVertice->prox = NULL;
-    return insereVertice;
+    struct VerticeListaAdj* novoVertice = (struct VerticeListaAdj*) malloc(sizeof(struct VerticeListaAdj));
+    novoVertice->destino = destino;
+    novoVertice->peso = peso;
+    novoVertice->prox = NULL;
+    return novoVertice;
 }
 
 // Função que cria um grafo com V vértices
@@ -309,14 +309,14 @@ void dijkstra(struct Grafo* grafo, int origem)
 
     t_fim = clock(); // Guarda o horario do fim da execução
 
-    tempo = (t_fim, t_inicio)*1000/CLOCKS_PER_SEC; // Calcula o tempo de execução
+    tempo = (float)(t_fim - t_inicio)/CLOCKS_PER_SEC; // Calcula o tempo de execução
 
 
     FILE *arquivoSaida;
-    arquivoSaida = abreArquivo('a',"/home/solange/Documentos/Trabalho Pratico/TrabalhoAPA/check/saida_check_v5_s2.txt");
+    arquivoSaida = abreArquivo('a',"/home/solange/Documentos/Trabalho Pratico/Saidas/teste/saida_check_v5_s2.txt");
 
     // Imprime o tempo de execução
-    fprintf(arquivoSaida, "\nTempo total de execução: %f milissegundo(s).\n\n", tempo);
+    fprintf(arquivoSaida, "\nTempo total de execução: %f segundo(s).\n\n", tempo);
 
     // Imprime as menores distâncias calculadas
     for (int i = 0; i < V; ++i)

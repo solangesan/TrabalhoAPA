@@ -6,3 +6,11 @@ Tempo total de execução: 1.000000 milissegundo(s).
 2 	 33
 3 	 30
 4 	 27
+
+Tempo total de execução: 0.009000 milissegundo(s).
+
+0 	 0
+1 	 5
+2 	 33
+3 	 30
+4 	 27
