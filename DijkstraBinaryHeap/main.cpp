@@ -3,7 +3,11 @@
 #include <limits.h>
 #include <string.h>
 #include <time.h>
+#include <iostream>
 #define INFINITO 1000000
+
+//Declaração de função global
+void Menu();
 
 // Struct para representar um nó na lista de adjacência
 struct VerticeListaAdj
@@ -72,8 +76,8 @@ FILE* abreArquivo(char modo, char caminho[100])
     }
     if(arquivo == NULL)
 	{
-        printf("Nao foi possivel abrir o arquivo");
-        exit(0);
+        printf("Nao foi possivel abrir o arquivo.");
+        Menu();
 	}
 	return arquivo;
 }
@@ -256,7 +260,7 @@ bool existeNoHeapMin(struct HeapMin *heapMin, int v)
 // os outros nós. É uma função com complexidade O(ELogV)
 // O cálculo do tempo de execução foi inserido na função para que os tempos leitura
 // de dados e de escrita nos arquivos de saída não seja considerado para o tempo total.
-void dijkstra(struct Grafo* grafo, int origem)
+void dijkstra(struct Grafo* grafo, int origem, char nomeArquivo[100])
 {
     // Variáveis para medir o tempo de execução
     float tempo;
@@ -321,7 +325,11 @@ void dijkstra(struct Grafo* grafo, int origem)
 
     // Escreve no arquivo de saída
     FILE *arquivoSaida;
-    arquivoSaida = abreArquivo('a',"/home/solange/Documentos/Trabalho Pratico/Saidas/test-set2/saida_inst_v100_s2_2.txt");
+
+    char *nomeArquivoSaida;
+    // Renomeia arquivo de saída para não sobrescrever a entrada
+    nomeArquivoSaida = strncat(nomeArquivo, ".out", 4);
+    arquivoSaida = abreArquivo('a',nomeArquivoSaida);
 
     // Imprime o tempo de execução
     fprintf(arquivoSaida, "\nTempo total de execução: %f segundo(s).\n\n", tempo);
@@ -334,23 +342,19 @@ void dijkstra(struct Grafo* grafo, int origem)
 }
 
 
-// Programa main
-int main()
-{
-
-	FILE *arquivoEntrada;
+// Função principal que monta o grafo, solicita o nó de origem e faz os cálculos do Dijkstra
+void FuncaoPrincipal(char caminho[30]){
+    FILE *arquivoEntrada;
 
     char prefixo[10];
-    int valor1, valor2, valor3;
-	int V;
+    int V, no_origem, valor1, valor2, valor3;
     struct Grafo* grafo = constroiGrafo(0);
-
-    char caminho[100] = "/home/solange/Documentos/Trabalho Pratico/Programas/grafos/test-set2/inst_v100_s2_2.dat";
 
 	arquivoEntrada = abreArquivo('l', caminho);
 
 	fscanf(arquivoEntrada, "%s", &prefixo);
 
+	// Construção do grafo para os casos não direcionados (ALUE e DMXA)
     if(strcmp(prefixo, "A") == 0) {
         while(!feof(arquivoEntrada))
         {
@@ -359,18 +363,29 @@ int main()
             {
                 V = valor1;
 
-                printf("Total de vértices do grafo: %d \n\n", V);
+                // Contrói o Grafo com V vértices
                 grafo = constroiGrafo(V);
             }
+            // Insere arestas no grafo não direcionado
             if(strcmp(prefixo, "E") == 0){
                 insereArestaBiDirecional(grafo, valor1, valor2, valor3);
             }
 
         }
-        // Executa o Dijkstra para os grafos esparsos (inicia no vértice 1)
-        dijkstra(grafo, 1);
+        no_origem = NULL;
+        printf("\nDigite o nó de origem entre 1 e %d: ", V);
+        scanf("%d", &no_origem);
 
-    } else if (strcmp(prefixo, "G") == 0){
+         // Executa o Dijkstra para os grafos esparsos (inicia no vértice 1)
+        if (no_origem > 0 && no_origem <= V){
+            dijkstra(grafo, no_origem, caminho);
+            printf("Cálculo completo. Arquivo de saída gerado");
+        } else {
+            printf("\nNó de origem inválido.");
+
+        }
+
+    } else if (strcmp(prefixo, "G") == 0){ // Construção do grafo para os casos direcionados (test-set1 e 2)
         while(!feof(arquivoEntrada))
         {
             fscanf(arquivoEntrada, "%s %d %d %d" , &prefixo, &valor1, &valor2, &valor3);
@@ -378,19 +393,67 @@ int main()
             {
                 V = valor1;
 
-                printf("Total de vértices do grafo: %d \n\n", V);
+                // Constrói grafo com V vértices
                 grafo = constroiGrafo(V);
             }
+            // Insere arestas nos grafos não direcionados (test-set1 e test-set2)
             if(strcmp(prefixo, "E") == 0){
                 insereArestaDirecionado(grafo, valor1, valor2, valor3);
             }
         }
+        no_origem = NULL;
+        printf("\nDigite o nó de origem entre 0 e %d: ", V);
+        scanf("%d", &no_origem);
+
         // Executa o Dijkstra para os grafos completos (inicia no vértice 0)
-        dijkstra(grafo, 0);
+        if (no_origem >= 0 && no_origem < V){
+            dijkstra(grafo, no_origem, caminho);
+            printf("Cálculo completo. Arquivo de saída gerado");
+        } else {
+            printf("\nNó de origem inválido.");
+        }
     }
 
 
 	fechaArquivo(arquivoEntrada);
+}
+
+// Função Menu
+void Menu(){
+    int opcao;
+    char nomearquivo[100];
+    //Menu
+    do {
+
+        printf("\n\n\t\tPrograma DIJKSTRA HEAP BINÁRIO\n");
+        printf("\nEscolha uma das opções abaixo:\n");
+        printf("\n 1 - Calcular Dijkstra para um arquivo");
+        printf("\n 2 - Sair\n\n");
+
+        scanf("%d", &opcao);
+        system("clear");
+
+
+        switch(opcao){
+            case 1:{
+                    printf("\nDigite o nome do arquivo com extensão: ");
+                    scanf("%s", &nomearquivo);
+                    FuncaoPrincipal(nomearquivo);
+                    continue;
+                }
+            case 2:
+                exit(0);
+            default:
+                printf("Opção inválida! Escolha outra opção.\n\n");
+        }
+    }while(opcao != 2);
+}
+
+// Programa main
+int main()
+{
+
+    Menu();
 
     return 0;
 }

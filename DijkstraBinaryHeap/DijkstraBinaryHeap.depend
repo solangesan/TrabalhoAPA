@@ -6,10 +6,11 @@
 	<string.h>
 	<time.h>
 
-1497751667 source:/home/solange/Documentos/Trabalho Pratico/TrabalhoAPA/DijkstraBinaryHeap/main.cpp
+1497798134 source:/home/solange/Documentos/Trabalho Pratico/TrabalhoAPA/DijkstraBinaryHeap/main.cpp
 	<stdio.h>
 	<stdlib.h>
 	<limits.h>
 	<string.h>
 	<time.h>
+	<iostream>
 
