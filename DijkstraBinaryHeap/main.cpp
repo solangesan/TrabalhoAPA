@@ -3,6 +3,7 @@
 #include <limits.h>
 #include <string.h>
 #include <time.h>
+#define INFINITO 1000000
 
 // Struct para representar um nó na lista de adjacência
 struct VerticeListaAdj
@@ -54,7 +55,7 @@ struct Grafo* constroiGrafo(int V)
 
 
 // Manipulação de arquivos
-FILE* abreArquivo(char modo, char caminho[30])
+FILE* abreArquivo(char modo, char caminho[100])
 {
     FILE *arquivo;
     switch(modo)
@@ -85,13 +86,28 @@ void fechaArquivo(FILE* arquivo)
 
 
 // Inclui uma aresta em no grafo (direcionado)
-void insereAresta(struct Grafo* grafo, int origem, int destino, int peso)
+void insereArestaDirecionado(struct Grafo* grafo, int origem, int destino, int peso)
 {
     // Inclui uma aresta da origem ao destino. Um novo nó é adicionado à lista de adjacência
     // da origem.  O nó é colocado no início da lista
     struct VerticeListaAdj* insereVertice = insereVerticeListaAdj(destino, peso);
     insereVertice->prox = grafo->array[origem].inicio;
     grafo->array[origem].inicio = insereVertice;
+}
+
+// Inclui uma aresta em no grafo (direcionado)
+void insereArestaBiDirecional(struct Grafo* grafo, int origem, int destino, int peso)
+{
+    // Inclui uma aresta da origem ao destino. Um novo nó é adicionado à lista de adjacência
+    // da origem.  O nó é colocado no início da lista
+    struct VerticeListaAdj* novoVertice = insereVerticeListaAdj(destino, peso);
+    novoVertice->prox = grafo->array[origem].inicio;
+    grafo->array[origem].inicio = novoVertice;
+
+     // Insere uma aresta de volta para tornar o grafo bi-direcional (ALUE e DMXA)
+    novoVertice = insereVerticeListaAdj(origem, peso);
+    novoVertice->prox = grafo->array[destino].inicio;
+    grafo->array[destino].inicio = novoVertice;
 }
 
 // Struct que representa o nó min da heap
@@ -110,11 +126,10 @@ struct HeapMin
     struct VerticeHeapMin **array;
 };
 
-// Funçã que cria um novo nó no Heap min
+// Função que cria um novo nó no Heap min
 struct VerticeHeapMin* insereVerticeHeapMin(int v, int dist)
 {
-    struct VerticeHeapMin* heapMinVertice =
-           (struct VerticeHeapMin*) malloc(sizeof(struct VerticeHeapMin));
+    struct VerticeHeapMin* heapMinVertice = (struct VerticeHeapMin*) malloc(sizeof(struct VerticeHeapMin));
     heapMinVertice->v = v;
     heapMinVertice->dist = dist;
     return heapMinVertice;
@@ -237,13 +252,6 @@ bool existeNoHeapMin(struct HeapMin *heapMin, int v)
    return false;
 }
 
-// Função para imprimir a solução
-void imprime(int dist[], int n)
-{
-    printf("Menor distância do nó a partir da origem\n");
-    for (int i = 0; i < n; ++i)
-        printf("%d \t\t %d\n", i, dist[i]);
-}
 
 // A função principal que calcula as distâncias dos caminhos mais curtos da origem para todos
 // os outros nós. É uma função com complexidade O(ELogV)
@@ -265,7 +273,7 @@ void dijkstra(struct Grafo* grafo, int origem)
     // Inicializa o heap min com todos os vértices. atribui o valor da distância de todos os vértices
     for (int v = 0; v < V; ++v)
     {
-        dist[v] = INT_MAX;
+        dist[v] = INFINITO;
         heapMin->array[v] = insereVerticeHeapMin(v, dist[v]);
         heapMin->pos[v] = v;
     }
@@ -296,7 +304,7 @@ void dijkstra(struct Grafo* grafo, int origem)
 
             // Se a menor distância para v não está finalizada, e a distância para v
             // passando por u é menor que sua distância calculada anterior..
-            if (existeNoHeapMin(heapMin, v) && dist[u] != INT_MAX && visitado->peso + dist[u] < dist[v])
+            if (existeNoHeapMin(heapMin, v) && dist[u] != INFINITO && visitado->peso + dist[u] < dist[v])
             {
                 dist[v] = dist[u] + visitado->peso;
 
@@ -313,14 +321,14 @@ void dijkstra(struct Grafo* grafo, int origem)
 
 
     FILE *arquivoSaida;
-    arquivoSaida = abreArquivo('a',"/home/solange/Documentos/Trabalho Pratico/Saidas/teste/saida_check_v5_s2.txt");
+    arquivoSaida = abreArquivo('a',"/home/solange/Documentos/Trabalho Pratico/Saidas/test-set2/saida_inst_v100_s2_2.txt");
 
     // Imprime o tempo de execução
     fprintf(arquivoSaida, "\nTempo total de execução: %f segundo(s).\n\n", tempo);
 
     // Imprime as menores distâncias calculadas
-    for (int i = 0; i < V; ++i)
-        fprintf(arquivoSaida, "%d \t %d\n", i, dist[i]);
+    for (int i = origem; i < V; ++i)
+        fprintf(arquivoSaida, "Origem: %i \t Destino: %d \t Distância: %d\n", origem, i, dist[i]);
 
     fechaArquivo(arquivoSaida);
 }
@@ -339,25 +347,51 @@ int main()
 	int V;
     struct Grafo* grafo = constroiGrafo(0);
 
-	arquivoEntrada = abreArquivo('l', "/home/solange/Documentos/Trabalho Pratico/TrabalhoAPA/check/check_v5_s2.dat");
+    char caminho[100] = "/home/solange/Documentos/Trabalho Pratico/Programas/grafos/test-set2/inst_v100_s2_2.dat";
 
+	arquivoEntrada = abreArquivo('l', caminho);
 
-	while(!feof(arquivoEntrada))
-	{
+	fscanf(arquivoEntrada, "%s", &prefixo);
 
-        fscanf(arquivoEntrada, "%s %d %d %d" , &prefixo, &valor1, &valor2, &valor3);
-        if(strcmp(prefixo, "V") == 0)
+    if(strcmp(prefixo, "A") == 0) {
+        while(!feof(arquivoEntrada))
         {
-            V = valor1;
+            fscanf(arquivoEntrada, "%s %d %d %d" , &prefixo, &valor1, &valor2, &valor3);
+            if(strcmp(prefixo, "V") == 0)
+            {
+                V = valor1;
 
-            printf("Total de vértices do grafo: %d \n\n", V);
-            grafo = constroiGrafo(V);
+                printf("Total de vértices do grafo: %d \n\n", V);
+                grafo = constroiGrafo(V);
+                printf("Esse é um grafo bi-direcional forçado");
+            }
+            if(strcmp(prefixo, "E") == 0){
+                insereArestaBiDirecional(grafo, valor1, valor2, valor3);
+            }
+
         }
-        if(strcmp(prefixo, "E") == 0){
-            insereAresta(grafo, valor1, valor2, valor3);
-            //fprintf(arquivoSaida, "%s %d %d %d\n", prefixo, valor1, valor2, valor3);
+
+        dijkstra(grafo, 1);
+
+    } else if (strcmp(prefixo, "G") == 0){
+        while(!feof(arquivoEntrada))
+        {
+            fscanf(arquivoEntrada, "%s %d %d %d" , &prefixo, &valor1, &valor2, &valor3);
+            if(strcmp(prefixo, "V") == 0)
+            {
+                V = valor1;
+
+                printf("Total de vértices do grafo: %d \n\n", V);
+                grafo = constroiGrafo(V);
+                printf("Esse é um grafo bi-direcional original");
+            }
+            if(strcmp(prefixo, "E") == 0){
+                insereArestaDirecionado(grafo, valor1, valor2, valor3);
+            }
         }
-	}
+
+        dijkstra(grafo, 0);
+    }
 
 
 
@@ -365,7 +399,7 @@ int main()
 //	fechaArquivo(arquivoSaida);
 
 
-    dijkstra(grafo, 0); // Executa o Dijkstra para o grafo
+     // Executa o Dijkstra para o grafo
 
     return 0;
 }
