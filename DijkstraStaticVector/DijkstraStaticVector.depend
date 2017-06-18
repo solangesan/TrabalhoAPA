@@ -1,4 +1,14 @@
 # depslib dependency file v1.0
-1497739176 source:/home/solange/Documentos/Trabalho Pratico/TrabalhoAPA/DijkstraStaticVector/main.cpp
+1497805174 source:/home/solange/Documentos/Trabalho Pratico/TrabalhoAPA/DijkstraStaticVector/main.cpp
+	<stdio.h>
+	<stdlib.h>
+	<limits.h>
+	<string.h>
+	<iostream>
+	"Lista.h"
+	<time.h>
+
+1497805263 /home/solange/Documentos/Trabalho Pratico/TrabalhoAPA/DijkstraStaticVector/Lista.h
+	<stdexcept>
 	<iostream>
 

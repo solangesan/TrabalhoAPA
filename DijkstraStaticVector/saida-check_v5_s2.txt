@@ -1,0 +1,16 @@
+
+Tempo total de execução: 4.00 milissegundo(s).
+
+0 	 0
+1 	 5
+2 	 4
+3 	 26
+4 	 32
+
+Tempo total de execução: 4.00 milissegundo(s).
+
+0 	 0
+1 	 5
+2 	 4
+3 	 26
+4 	 32
