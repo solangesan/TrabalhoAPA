@@ -85,7 +85,7 @@ void fechaArquivo(FILE* arquivo)
 
 
 
-// Inclui uma aresta em no grafo (direcionado)
+// Inclui uma aresta em um grafo (direcionado)
 void insereArestaDirecionado(struct Grafo* grafo, int origem, int destino, int peso)
 {
     // Inclui uma aresta da origem ao destino. Um novo nó é adicionado à lista de adjacência
@@ -95,7 +95,7 @@ void insereArestaDirecionado(struct Grafo* grafo, int origem, int destino, int p
     grafo->array[origem].inicio = insereVertice;
 }
 
-// Inclui uma aresta em no grafo (direcionado)
+// Inclui uma aresta em um grafo (direcionado)
 void insereArestaBiDirecional(struct Grafo* grafo, int origem, int destino, int peso)
 {
     // Inclui uma aresta da origem ao destino. Um novo nó é adicionado à lista de adjacência
@@ -154,7 +154,7 @@ void trocaVerticeHeapMin(struct VerticeHeapMin** a, struct VerticeHeapMin** b)
     *b = t;
 }
 
-// Uma função para heapify um índice específico
+// Função heapfy
 // Esta função também atualiza a posição dos nós quando eles são trocados.
 // A posição é necessária para a função diminuichave()
 void heapfyMin(struct HeapMin* heapMin, int ind)
@@ -189,7 +189,7 @@ void heapfyMin(struct HeapMin* heapMin, int ind)
     }
 }
 
-// Função para checar se a heap min está vazia
+// Função para checar se o heap está vazio
 int ehVazia(struct HeapMin* heapMin)
 {
     return heapMin->tamanho == 0;
@@ -219,18 +219,17 @@ struct VerticeHeapMin* removeMin(struct HeapMin* heapMin)
     return raiz;
 }
 
-// Função para decrementar o valor da distância de um vértice v. Esta função
-// usa pos[] do heap min para pegar o índice atual do nó no heap min
+// Função para decrementar o valor da distância de um vértice v.
 void diminuiChave(struct HeapMin* heapMin, int v, int dist)
 {
     // Pega o índice de v no heap array
     int i = heapMin->pos[v];
 
-    // Pega o nó e atualiza o valor da distância
+    // Atualiza o valor da distância
     heapMin->array[i]->dist = dist;
 
-    // Caminha para cima enquanto a árvore completa não é inserida no heap.
-    // Este é um laço de complexidade O(Logn)
+    // Caminha pela árvore enquanto há nós para serem inseridos no heap.
+    // Laço de complexidade O(Logn)
     while (i && heapMin->array[i]->dist < heapMin->array[(i - 1) / 2]->dist)
     {
         // Troca o nó atual com o nó pai
@@ -253,8 +252,10 @@ bool existeNoHeapMin(struct HeapMin *heapMin, int v)
 }
 
 
-// A função principal que calcula as distâncias dos caminhos mais curtos da origem para todos
+// Função que calcula as distâncias dos caminhos mais curtos da origem para todos
 // os outros nós. É uma função com complexidade O(ELogV)
+// O cálculo do tempo de execução foi inserido na função para que os tempos leitura
+// de dados e de escrita nos arquivos de saída não seja considerado para o tempo total.
 void dijkstra(struct Grafo* grafo, int origem)
 {
     // Variáveis para medir o tempo de execução
@@ -287,8 +288,7 @@ void dijkstra(struct Grafo* grafo, int origem)
     // Inicializa o tamanho do heap min igual a V
     heapMin->tamanho = V;
 
-    // Vertice laço seguinte, heap min contém todos os nós
-    // para os quais o  caminho mais curto ainda não foi finalizado.
+    // Faz o cálculo para os nós que ainda não tiveram o caminho mais curto finalizado.
     while (!ehVazia(heapMin))
     {
         // Extrai o vértice com o menor valor de distância
@@ -303,12 +303,12 @@ void dijkstra(struct Grafo* grafo, int origem)
             int v = visitado->destino;
 
             // Se a menor distância para v não está finalizada, e a distância para v
-            // passando por u é menor que sua distância calculada anterior..
+            // passando por u é menor que sua distância calculada anterior...
             if (existeNoHeapMin(heapMin, v) && dist[u] != INFINITO && visitado->peso + dist[u] < dist[v])
             {
                 dist[v] = dist[u] + visitado->peso;
 
-                // ..atualiza o valor da distância no heap min também
+                // ...atualiza o valor da distância no heap min também
                 diminuiChave(heapMin, v, dist[v]);
             }
             visitado = visitado->prox;
@@ -319,7 +319,7 @@ void dijkstra(struct Grafo* grafo, int origem)
 
     tempo = (float)(t_fim - t_inicio)/CLOCKS_PER_SEC; // Calcula o tempo de execução
 
-
+    // Escreve no arquivo de saída
     FILE *arquivoSaida;
     arquivoSaida = abreArquivo('a',"/home/solange/Documentos/Trabalho Pratico/Saidas/test-set2/saida_inst_v100_s2_2.txt");
 
@@ -334,14 +334,12 @@ void dijkstra(struct Grafo* grafo, int origem)
 }
 
 
-// Programa main para testar as funções acima
+// Programa main
 int main()
 {
 
-    // testes com arquivos
-
 	FILE *arquivoEntrada;
-//	FILE *arquivoSaida;
+
     char prefixo[10];
     int valor1, valor2, valor3;
 	int V;
@@ -363,14 +361,13 @@ int main()
 
                 printf("Total de vértices do grafo: %d \n\n", V);
                 grafo = constroiGrafo(V);
-                printf("Esse é um grafo bi-direcional forçado");
             }
             if(strcmp(prefixo, "E") == 0){
                 insereArestaBiDirecional(grafo, valor1, valor2, valor3);
             }
 
         }
-
+        // Executa o Dijkstra para os grafos esparsos (inicia no vértice 1)
         dijkstra(grafo, 1);
 
     } else if (strcmp(prefixo, "G") == 0){
@@ -383,23 +380,17 @@ int main()
 
                 printf("Total de vértices do grafo: %d \n\n", V);
                 grafo = constroiGrafo(V);
-                printf("Esse é um grafo bi-direcional original");
             }
             if(strcmp(prefixo, "E") == 0){
                 insereArestaDirecionado(grafo, valor1, valor2, valor3);
             }
         }
-
+        // Executa o Dijkstra para os grafos completos (inicia no vértice 0)
         dijkstra(grafo, 0);
     }
 
 
-
 	fechaArquivo(arquivoEntrada);
-//	fechaArquivo(arquivoSaida);
-
-
-     // Executa o Dijkstra para o grafo
 
     return 0;
 }
