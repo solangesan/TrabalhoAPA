@@ -363,10 +363,9 @@ void fechaArquivo(FILE* arquivo)
 
 // Programa main
 int main(){
-    // testes com arquivos
 
 	FILE *arquivoEntrada;
-//	FILE *arquivoSaida;
+
     char prefixo[10], caminho[30];
     int valor1, valor2, valor3;
     int no_origem;
@@ -384,10 +383,6 @@ int main(){
     scanf("%s", &caminho);
 
 	arquivoEntrada = abreArquivo('l', caminho);
-	printf("abriu o arquivo \n\n");
-	if(arquivoEntrada == NULL)
-   		printf("Nao foi possivel abrir o arquivo!");
-
 
     fscanf(arquivoEntrada, "%s", &prefixo);
 
@@ -399,11 +394,11 @@ int main(){
             if(strcmp(prefixo, "V") == 0){
                 printf("Total de vértices do grafo: %d \n\n", valor1);
 
-                grafo = new Grafo (valor1);
+                grafo = new Grafo(valor1);
+                V = valor1;
 
             }
             if(strcmp(prefixo, "E") == 0){
-
                 Grafo::Aresta *a = new Grafo::Aresta (valor1, valor2, valor3);
                 grafo->insereAresta (a->_v1(), a->_v2(), a->_peso());
                 grafo->insereAresta (a->_v2(), a->_v1(), a->_peso());
@@ -437,7 +432,7 @@ int main(){
             fprintf(arquivoSaida, "\nTempo total de execução: %f segundo(s).\n\n", tempo);
 
             for (int i = 0; i < V; ++i){
-                fprintf(arquivoSaida, "%d \t %d\n", i, dj._peso(i));
+                fprintf(arquivoSaida, "Origem: %i \t Destino: %d \t Distância: %d\n", no_origem, i, dj._peso(i));
             }
 
             fechaArquivo(arquivoSaida);
@@ -454,9 +449,11 @@ int main(){
             if(strcmp(prefixo, "V") == 0){
                 printf("Total de vértices do grafo: %d \n\n", valor1);
 
-                grafo = new Grafo (valor1);
+                grafo = new Grafo(valor1);
+                V = valor1;
             }
             if(strcmp(prefixo, "E") == 0){
+                printf("%s %d %d %d", prefixo, valor1, valor2, valor3);
 
                 Grafo::Aresta *a = new Grafo::Aresta (valor1, valor2, valor3);
                 grafo->insereAresta (a->_v1 (), a->_v2 (), a->_peso ());
@@ -490,7 +487,7 @@ int main(){
             fprintf(arquivoSaida, "\nTempo total de execução: %f segundo(s).\n\n", tempo);
 
             for (int i = 0; i < V; ++i){
-                fprintf(arquivoSaida, "%d \t %d\n", i, dj._peso(i));
+                fprintf(arquivoSaida, "Origem: %i \t Destino: %d \t Distância: %d\n", no_origem, i, dj._peso(i));
             }
 
             fechaArquivo(arquivoSaida);
@@ -507,7 +504,6 @@ int main(){
 
 	fechaArquivo(arquivoEntrada);
 
-    //grafo->imprime ();
 
     delete grafo;
     return 0;

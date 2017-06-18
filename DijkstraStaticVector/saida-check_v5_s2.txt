@@ -1,0 +1,48 @@
+
+Tempo total de execução: 0.005775 segundo(s).
+
+0 	 0
+1 	 5
+2 	 4
+3 	 26
+4 	 32
+
+Tempo total de execução: 0.006514 segundo(s).
+
+0 	 0
+1 	 5
+2 	 4
+3 	 26
+4 	 32
+
+Tempo total de execução: 0.006486 segundo(s).
+
+Origem: 0 	 Destino: 0 	 Distância: -1217428028
+Origem: 1 	 Destino: 5 	 Distância: -1217428028
+Origem: 2 	 Destino: 4 	 Distância: -1217428028
+Origem: 3 	 Destino: 26 	 Distância: -1217428028
+Origem: 4 	 Destino: 32 	 Distância: -1217428028
+
+Tempo total de execução: 0.006542 segundo(s).
+
+Origem: 0 	 Destino: 0 	 Distância: -1217620540
+Origem: 1 	 Destino: 5 	 Distância: -1217620540
+Origem: 2 	 Destino: 4 	 Distância: -1217620540
+Origem: 3 	 Destino: 26 	 Distância: -1217620540
+Origem: 4 	 Destino: 32 	 Distância: -1217620540
+
+Tempo total de execução: 0.006411 segundo(s).
+
+0 	 0
+1 	 5
+2 	 4
+3 	 26
+4 	 32
+
+Tempo total de execução: 0.006209 segundo(s).
+
+Origem: 0 	 Destino: 0 	 Distância: 0
+Origem: 0 	 Destino: 1 	 Distância: 5
+Origem: 0 	 Destino: 2 	 Distância: 4
+Origem: 0 	 Destino: 3 	 Distância: 26
+Origem: 0 	 Destino: 4 	 Distância: 32
