@@ -59,7 +59,7 @@ struct Grafo* constroiGrafo(int V)
 
 
 // Manipulação de arquivos
-FILE* abreArquivo(char modo, char caminho[100])
+FILE* abreArquivo(char modo, char caminho[30])
 {
     FILE *arquivo;
     switch(modo)
@@ -92,8 +92,7 @@ void fechaArquivo(FILE* arquivo)
 // Inclui uma aresta em um grafo (direcionado)
 void insereArestaDirecionado(struct Grafo* grafo, int origem, int destino, int peso)
 {
-    // Inclui uma aresta da origem ao destino. Um novo nó é adicionado à lista de adjacência
-    // da origem.  O nó é colocado no início da lista
+    // Insere uma aresta da origem para o destino
     struct VerticeListaAdj* insereVertice = insereVerticeListaAdj(destino, peso);
     insereVertice->prox = grafo->array[origem].inicio;
     grafo->array[origem].inicio = insereVertice;
@@ -102,8 +101,7 @@ void insereArestaDirecionado(struct Grafo* grafo, int origem, int destino, int p
 // Inclui uma aresta em um grafo (direcionado)
 void insereArestaBiDirecional(struct Grafo* grafo, int origem, int destino, int peso)
 {
-    // Inclui uma aresta da origem ao destino. Um novo nó é adicionado à lista de adjacência
-    // da origem.  O nó é colocado no início da lista
+    // Insere uma aresta da origem para o destino
     struct VerticeListaAdj* novoVertice = insereVerticeListaAdj(destino, peso);
     novoVertice->prox = grafo->array[origem].inicio;
     grafo->array[origem].inicio = novoVertice;
@@ -421,7 +419,7 @@ void FuncaoPrincipal(char caminho[30]){
 // Função Menu
 void Menu(){
     int opcao;
-    char nomearquivo[100];
+    char nomearquivo[30];
     //Menu
     do {
 

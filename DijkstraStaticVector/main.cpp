@@ -12,6 +12,33 @@ using std::endl;
 using std::ostream;
 using autoreferencia::Lista;
 
+//Declaração de função global
+void Menu();
+
+// Manipulação de arquivos
+FILE* abreArquivo(char modo, char caminho[30])
+{
+    FILE *arquivo;
+    switch(modo)
+    {
+        case 'g':
+            arquivo = fopen(caminho, "wt");
+            break;
+        case 'l':
+            arquivo = fopen(caminho, "rt");
+            break;
+        case 'a':
+            arquivo = fopen(caminho, "a");
+            break;
+    }
+    if(arquivo == NULL)
+	{
+        printf("Nao foi possivel abrir o arquivo.");
+        //Menu();  <-- voltar apenas na versão final
+        exit(0); // apagar na versão final
+	}
+	return arquivo;
+}
 
 class FPNaoOrdenado	{
 
@@ -37,6 +64,7 @@ class FPNaoOrdenado	{
 			this->peso = peso;
 		}
 	};
+
 	public:
 	int tamanho; //tamanho da fila
 	Elemento vet[INFINITO]; //vetor  de tamanho mamximo definido; contendo um Elemeno(vertice,peso)
@@ -45,62 +73,57 @@ class FPNaoOrdenado	{
 		this->tamanho = 0;
 	}
 
-	void insere(int dado, int prior){
+	void insere(int dado, int distancia){
 		if (this->tamanho == INFINITO)
 			throw logic_error ("Erro: Fila cheia");
 		else{
-			Elemento e =  Elemento (dado,prior);
+			Elemento e =  Elemento (dado,distancia);
 			this->vet[tamanho] = e;
 			this->tamanho++;
 		}
 	}
 
-	Elemento remove(){  //remove o elemento de maior prioridade = menor peso
+	Elemento remove(){  //remove o elemento de maior distancia = menor peso
 		int menorP, posMenorP;
 	  	if (this->tamanho < 1)
 			throw logic_error ("Erro: fila vazia");
-  		Elemento minElem, temp; //
+  		Elemento elementoMin, temp; //
 		temp = (Elemento)this->vet[0]; //seta o primeiro elemento como o menor peso
 		menorP = temp._peso();
 		posMenorP = 0;
 
-		minElem = temp;
+		elementoMin = temp;
 		for(int i= 1; i< this->tamanho; i++){
 	    	temp = this->vet[i]; //
     		int pesoAtual =temp._peso();
 	    	if(menorP > pesoAtual){ //se o peso do 0, for maior que o peso da posicao 1, seta o menor para o da posicao 1;
 	      		menorP = pesoAtual;
-	      		minElem = temp;
+	      		elementoMin = temp;
 	      		posMenorP = i;
 	    	}
 	    	//printf(" menorP= %d \n",  menorP);
 	  	}
-	  	for (int i=posMenorP; i<this->tamanho-1; i++ ){//retira o minElem, movendo os proximos pra posicao dele
+	  	for (int i=posMenorP; i<this->tamanho-1; i++ ){//retira o elementoMin, movendo os proximos pra posicao dele
 	  		this->vet[i]= this->vet[i+1]; //
-			/*
-	  		Elemento aux = (Elemento)this->vet[i]; //
-			printf(" vet[%d]= %d \n", i, this->vet[i]);
-	  		printf(" peso[%d]= %d \n", i, aux._peso());
-	  		printf(" vertice[%d]= %d \n", i, aux._vertice());
-	  		*/
+
 		}
 		this->tamanho--;
-		return minElem;
+		return elementoMin;
 	}
 
-	void diminuiChave(int dado, int prior){
+	void diminuiChave(int dado, int distancia){
 		Elemento temp;
 		if (this->tamanho < 1)
 			throw logic_error ("Erro: fila vazia");
 		temp = this->vet[0];
-		printf(" prior= %d \n",  prior);
-		if (prior < 0)
-	    	throw logic_error ("Erro: chaveNova com valor incorreto");
+		printf(" distancia= %d \n",  distancia);
+		if (distancia < 0)
+	    	throw logic_error ("Erro: nova chave com valor incorreto");
 		for(int i= 0; i< this->tamanho; i++){
 	    	temp = this->vet[i]; //
 	    	if(dado == temp._vertice()){
-				if(prior < this->vet[i]._peso())
-	      			this->vet[i].atribuiPeso(prior);
+				if(distancia < this->vet[i]._peso())
+	      			this->vet[i].atribuiPeso(distancia);
 	    	}
 	  	}
 	}
@@ -235,9 +258,8 @@ class Dijkstra {
 
 
 	void calculaDijkstra (int raiz) throw (logic_error) {
-		//printf("chegou aqui - 0 \n");
+
 		int n = this->grafo->_numVertices();
-		//printf("chegou aqui - 1 \n");
 
 	    if (this->p)
 			delete [] this->p;
@@ -339,101 +361,153 @@ void fechaArquivo(FILE* arquivo)
 }
 
 
-
-// Programa main para testar as funÃ§Ãµes acima
+// Programa main
 int main(){
     // testes com arquivos
 
 	FILE *arquivoEntrada;
 //	FILE *arquivoSaida;
-    char prefixo[10];
+    char prefixo[10], caminho[30];
     int valor1, valor2, valor3;
-
-	int nVertices = 0;
+    int no_origem;
+	int V = 0;
 	int nArestas = 0;
 	int raiz = 0;
-
-	Grafo *grafo = new Grafo (nVertices);
-
-	//arquivoEntrada =fopen("C:\\Users\\rubiasa\\Downloads\\inst_v5.txt", "r");
-	//arquivoEntrada =fopen("inst_v5.txt", "r");
-	//arquivoEntrada =fopen("check_v5_s1.dat", "r");
-	arquivoEntrada =fopen("check_v5_s1.dat", "r");
-	printf("abriu o arquivo \n\n");
-	if(arquivoEntrada == NULL)
-   		printf("Nao foi possivel abrir o arquivo!");
-
-	while(!feof(arquivoEntrada)){
-        fscanf(arquivoEntrada, "%s %d %d %d" , &prefixo, &valor1, &valor2, &valor3);
-        printf("prefixo %s \n", prefixo);
-        printf("valor1 %d \n", valor1);
-        printf("valor2 %d \n", valor2);
-        printf("valor3 %d \n", valor3);
-        if(strcmp(prefixo, "V") == 0){
-            printf("Total de vÃ©rtices do grafo: %d \n\n", valor1);
-
-            grafo = new Grafo (valor1);
-
-        }
-        if(strcmp(prefixo, "E") == 0){
-
-
-            Grafo::Aresta *a = new Grafo::Aresta (valor1, valor2, valor3);
-			grafo->insereAresta (a->_v1 (), a->_v2 (), a->_peso ());
-            //fprintf(arquivoSaida, "%s %d %d %d\n", prefixo, valor1, valor2, valor3);
-            //fprintf(arquivoSaida,"%d %d %d\n", valor1, valor2, valor3);
-            delete a;
-        }
-	}
-
-
-	fechaArquivo(arquivoEntrada);
-//	fechaArquivo(arquivoSaida);
-
-	printf("terminou de ler  o arquivo \n\n");
-
-    grafo->imprime ();
 
     // Variáveis para medir o tempo de execução
     float tempo;
     clock_t t_inicio, t_fim;
 
-	t_inicio = clock(); // Guarda o horário do início da execução
+	Grafo *grafo = new Grafo(V);
 
-    Dijkstra dj (grafo);
-    printf("chegou aqui 0 0 \n");
-    //dj.obterArvoreCMC(0);
+	printf("\nDigite o nome do arquivo: ");
+    scanf("%s", &caminho);
 
-    int nV = grafo->_numVertices();
-    printf("nV %d \n", nV);
-	dj.calculaDijkstra(0);
+	arquivoEntrada = abreArquivo('l', caminho);
+	printf("abriu o arquivo \n\n");
+	if(arquivoEntrada == NULL)
+   		printf("Nao foi possivel abrir o arquivo!");
 
-	t_fim = clock(); // Guarda o horario do fim da execução
 
-	tempo = (t_fim, t_inicio)*1000/CLOCKS_PER_SEC; // Calcula o tempo de execução
+    fscanf(arquivoEntrada, "%s", &prefixo);
 
-	printf("chegou aqui 0 1 \n");
+   	// Construção do grafo para os casos não direcionados (ALUE e DMXA)
+    if(strcmp(prefixo, "A") == 0) {
+        while(!feof(arquivoEntrada)){
+            fscanf(arquivoEntrada, "%s %d %d %d" , &prefixo, &valor1, &valor2, &valor3);
 
-    // imprime as menores distÃ¢ncias calculadas
-    //imprime(dist, V);
-    FILE *arquivoSaida;
-    //arquivoSaida = abreArquivo('a',"saida-inst_v5.txt");
-	//arquivoSaida =fopen("saida-inst_v5.txt", "a");
-	arquivoSaida =fopen("saida-check_v5_s2.txt", "a");
-	//arquivoSaida =fopen("saida-check_v5_s1.txt", "a");
-	printf("chegou aqui 0 2 \n");
-	// Imprime o tempo de execução
-	fprintf(arquivoSaida, "\nTempo total de execução: %.2f milissegundo(s).\n\n", tempo);
+            if(strcmp(prefixo, "V") == 0){
+                printf("Total de vértices do grafo: %d \n\n", valor1);
 
-	printf("chegou aqui 0 3 \n");
+                grafo = new Grafo (valor1);
 
-    for (int i = 0; i < nV; ++i){
-    	printf("chegou aqui 0 4 \n");
-    	fprintf(arquivoSaida, "%d \t %d\n", i, dj._peso(i));
-    	//fprintf(arquivoSaida, "%d \t %d\n", i, 1);
-	}
+            }
+            if(strcmp(prefixo, "E") == 0){
 
-    fechaArquivo(arquivoSaida);
+                Grafo::Aresta *a = new Grafo::Aresta (valor1, valor2, valor3);
+                grafo->insereAresta (a->_v1(), a->_v2(), a->_peso());
+                grafo->insereAresta (a->_v2(), a->_v1(), a->_peso());
+
+                delete a;
+            }
+        }
+        no_origem = NULL;
+        printf("\nDigite o nó de origem entre 1 e %d: ", V);
+        scanf("%d", &no_origem);
+
+         // Executa o Dijkstra para os grafos esparsos (inicia no vértice 1)
+        if (no_origem > 0 && no_origem <= V){
+            t_inicio = clock(); // Guarda o horário do início da execução
+            Dijkstra dj (grafo);
+
+            int nV = grafo->_numVertices();
+            printf("nV %d \n", nV);
+            dj.calculaDijkstra(0);
+
+            t_fim = clock(); // Guarda o horario do fim da execução
+
+            tempo = (float)(t_fim - t_inicio)/CLOCKS_PER_SEC; // Calcula o tempo de execução
+
+            // Gera o arquivo de saída
+            FILE *arquivoSaida;
+
+            arquivoSaida = fopen("saida-check_v5_s2.txt", "a");
+
+            // Imprime o tempo de execução
+            fprintf(arquivoSaida, "\nTempo total de execução: %f segundo(s).\n\n", tempo);
+
+            for (int i = 0; i < V; ++i){
+                fprintf(arquivoSaida, "%d \t %d\n", i, dj._peso(i));
+            }
+
+            fechaArquivo(arquivoSaida);
+            printf("Cálculo completo. Arquivo de saída gerado");
+        } else {
+            printf("\nNó de origem inválido.");
+
+        }
+
+    } else if (strcmp(prefixo, "G") == 0){ // Construção do grafo para os casos direcionados (test-set1 e 2)
+        while(!feof(arquivoEntrada)) {
+            fscanf(arquivoEntrada, "%s %d %d %d" , &prefixo, &valor1, &valor2, &valor3);
+
+            if(strcmp(prefixo, "V") == 0){
+                printf("Total de vértices do grafo: %d \n\n", valor1);
+
+                grafo = new Grafo (valor1);
+            }
+            if(strcmp(prefixo, "E") == 0){
+
+                Grafo::Aresta *a = new Grafo::Aresta (valor1, valor2, valor3);
+                grafo->insereAresta (a->_v1 (), a->_v2 (), a->_peso ());
+
+                delete a;
+            }
+        }
+        no_origem = NULL;
+        printf("\nDigite o nó de origem entre 0 e %d: ", V);
+        scanf("%d", &no_origem);
+
+        // Executa o Dijkstra para os grafos completos (inicia no vértice 0)
+        if (no_origem >= 0 && no_origem < V){
+           t_inicio = clock(); // Guarda o horário do início da execução
+            Dijkstra dj (grafo);
+
+            int nV = grafo->_numVertices();
+            printf("nV %d \n", nV);
+            dj.calculaDijkstra(0);
+
+            t_fim = clock(); // Guarda o horario do fim da execução
+
+            tempo = (float)(t_fim - t_inicio)/CLOCKS_PER_SEC; // Calcula o tempo de execução
+
+            // Gera o arquivo de saída
+            FILE *arquivoSaida;
+
+            arquivoSaida = fopen("saida-check_v5_s2.txt", "a");
+
+            // Imprime o tempo de execução
+            fprintf(arquivoSaida, "\nTempo total de execução: %f segundo(s).\n\n", tempo);
+
+            for (int i = 0; i < V; ++i){
+                fprintf(arquivoSaida, "%d \t %d\n", i, dj._peso(i));
+            }
+
+            fechaArquivo(arquivoSaida);
+            printf("Cálculo completo. Arquivo de saída gerado");
+
+        } else {
+            printf("\nNó de origem inválido.");
+        }
+    }
+
+
+
+
+
+	fechaArquivo(arquivoEntrada);
+
+    //grafo->imprime ();
 
     delete grafo;
     return 0;
