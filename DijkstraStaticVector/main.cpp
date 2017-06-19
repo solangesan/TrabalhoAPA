@@ -375,18 +375,17 @@ FILE *arquivoEntrada;
             fscanf(arquivoEntrada, "%s %d %d %d" , &prefixo, &valor1, &valor2, &valor3);
 
             if(strcmp(prefixo, "V") == 0){
-                printf("Total de vértices do grafo: %d \n\n", valor1);
 
                 grafo = new Grafo(valor1);
                 V = valor1;
 
             }
             if(strcmp(prefixo, "E") == 0){
-                printf("%s %d %d %d\n", prefixo, valor1, valor2, valor3);
+               // printf("%s %d %d %d\n", prefixo, valor1, valor2, valor3);
                 Grafo::Aresta *a = new Grafo::Aresta (valor1, valor2, valor3);
                 grafo->insereAresta (a->_v1 (), a->_v2 (), a->_peso ());
-
                 delete a;
+
             }
         }
         no_origem = NULL;
