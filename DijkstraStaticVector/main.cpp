@@ -1,3 +1,4 @@
+#define INFINITO 100000000
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
@@ -5,7 +6,6 @@
 #include <iostream>
 #include "Lista.h"
 #include <time.h>
-#define INFINITO 1000000
 
 using std::cout;
 using std::endl;
@@ -38,6 +38,11 @@ FILE* abreArquivo(char modo, char caminho[30])
         exit(0); // apagar na versão final
 	}
 	return arquivo;
+}
+
+void fechaArquivo(FILE* arquivo)
+{
+    fclose(arquivo);
 }
 
 class FPNaoOrdenado	{
@@ -116,7 +121,6 @@ class FPNaoOrdenado	{
 		if (this->tamanho < 1)
 			throw logic_error ("Erro: fila vazia");
 		temp = this->vet[0];
-		printf(" distancia= %d \n",  distancia);
 		if (distancia < 0)
 	    	throw logic_error ("Erro: nova chave com valor incorreto");
 		for(int i= 0; i< this->tamanho; i++){
@@ -178,8 +182,9 @@ class Grafo  {
 	        return this->vertice != celula.vertice;
 	      }
 	      const Celula& operator= (const Celula& cel) {
-	        this->vertice = cel.vertice; this->peso = cel.peso;
-	        return *this; // permite atribui\c{c}\~oes encadeadas
+	        this->vertice = cel.vertice;
+	        this->peso = cel.peso;
+	        return *this; // permite atribuições encadeadas
 	      }
 	      ~Celula () {}
 	};
@@ -191,31 +196,35 @@ class Grafo  {
   		this->adj = new Lista<Celula>[numVertices];
   		this->numVertices = numVertices;
 	}
+
 	void insereAresta (int v1, int v2, int peso) {
-    	Celula item(v2, peso);
-    	this->adj[v1].insere(item);
+        Celula item(v2, peso);
+        this->adj[v1].insere(item);
   	}
+
 	bool existeAresta (int v1, int v2) const {
 	    Celula item(v2, 0);
 	    return (this->adj[v1].pesquisa(item) != NULL);
 	}
+
 	bool listaAdjVazia (int v) {
 		return this->adj[v].vazia();
 	}
+
 	Aresta *primeiroListaAdj (int v) {
-	    // Retorna a primeira aresta que o v\'ertice v participa ou
-	    // {\bf NULL} se a lista de adjac\^encia de v for vazia
 	    // Retorna a primeira aresta que o vértice v participa ou
 		// null se a lista de adjacência de v for vazia
 	    Celula *item = this->adj[v]._primeiro();
 	    return item != NULL ? new Aresta(v,item->vertice,item->peso) : NULL;
-	  }
+    }
+
 	Aresta *proxAdj (int v) {
-	    // Retorna a pr\'oxima aresta que o v\'ertice v participa ou
-	    // {\bf NULL} se a lista de adjac\^encia de v estiver no fim
+	    // Retorna a próxima aresta que o vértice v participa ou
+	    // NULL se a lista de adjaência de v estiver no fim
 	    Celula *item = this->adj[v].proximo();
 	    return item != NULL ? new Aresta(v,item->vertice,item->peso) : NULL;
 	}
+
 	Aresta *retiraAresta (int v1, int v2) {
 	    Celula chave(v2, 0);
 	    Celula *item = this->adj[v1].retira(chave);
@@ -223,6 +232,7 @@ class Grafo  {
 	    delete item;
 		return aresta;
 	}
+
   	void imprime(){
 	    for (int i = 0; i < this->numVertices; i++) {
 		    cout << "Vertice " << i << ":" << endl;
@@ -233,13 +243,14 @@ class Grafo  {
 		    }
 	    }
   	}
+
 	int _numVertices () {
 		return this->numVertices;
 	}
 
-  ~Grafo () {
-    delete []this->adj;
-  }
+    ~Grafo() {
+        delete[]this->adj;
+    }
 
 };
 
@@ -274,8 +285,8 @@ class Dijkstra {
 
 	    for (int u = 0; u < n; u ++) {
 	      this->antecessor[u] = -1;
-	      p[u] = INFINITO; // @$\infty$@
-	      vs[u] = u; // Heap indireto a ser constru\'{\i}do
+	      p[u] = INFINITO;
+	      vs[u] = u;
 	    }
 
 	    p[raiz] = 0;
@@ -286,7 +297,6 @@ class Dijkstra {
 	    for (int i = 0; i<n; i++){
 	    	valorVertice = (int) vs[i];
 	    	valorPeso = (int)p[i];
-	    	printf("i= %d \n", i);
 	    	fila->insere(valorVertice,valorPeso);
 		}
 	    while (!fila->vazio()){
@@ -321,23 +331,6 @@ class Dijkstra {
 	  	return this->p[u];
 	}
 
-  	void imprime () {
-    	for (int u = 0; u < this->grafo->_numVertices (); u++)
-      		if (this->antecessor[u] != -1)
-        		cout << "(" << antecessor[u] <<  "," << u << ") -- p:" << _peso (u) << endl;
-  	}
-
- 	void imprimeCaminho (int origem, int v) const {
-    	if (origem == v)
-			cout << origem << endl;
-    	else if (this->antecessor[v] == -1)
-      	cout << "Nao existe caminho de " << origem << " ate " << v << endl;
-    	else {
-      		imprimeCaminho (origem, this->antecessor[v]);
-      		cout << v << endl;
-    	}
-  	}
-
   	~Dijkstra () {
   		this->grafo = NULL;
     	if (this->p)
@@ -346,19 +339,7 @@ class Dijkstra {
 		  	delete [] this->antecessor;
   }
 
-
-void fechaArquivo(FILE* arquivo)
-{
-    fclose(arquivo);
-}
 };
-
-
-
-void fechaArquivo(FILE* arquivo)
-{
-    fclose(arquivo);
-}
 
 
 // Programa main
@@ -368,7 +349,7 @@ int main(){
 
     char prefixo[10], caminho[30];
     int valor1, valor2, valor3;
-    int no_origem;
+    int no_origem = 0;
 	int V = 0;
 	int nArestas = 0;
 	int raiz = 0;
@@ -383,6 +364,11 @@ int main(){
     scanf("%s", &caminho);
 
 	arquivoEntrada = abreArquivo('l', caminho);
+
+	// Prepara o nome do arquivo de saída
+	char *nomeArquivoSaida;
+    // Renomeia arquivo de saída para não sobrescrever a entrada
+    nomeArquivoSaida = strncat(caminho, ".out", 4);
 
     fscanf(arquivoEntrada, "%s", &prefixo);
 
@@ -399,9 +385,9 @@ int main(){
 
             }
             if(strcmp(prefixo, "E") == 0){
+                printf("%s %d %d %d\n", prefixo, valor1, valor2, valor3);
                 Grafo::Aresta *a = new Grafo::Aresta (valor1, valor2, valor3);
-                grafo->insereAresta (a->_v1(), a->_v2(), a->_peso());
-                grafo->insereAresta (a->_v2(), a->_v1(), a->_peso());
+                grafo->insereAresta (a->_v1 (), a->_v2 (), a->_peso ());
 
                 delete a;
             }
@@ -410,14 +396,15 @@ int main(){
         printf("\nDigite o nó de origem entre 1 e %d: ", V);
         scanf("%d", &no_origem);
 
-         // Executa o Dijkstra para os grafos esparsos (inicia no vértice 1)
+
+        // Executa o Dijkstra para os grafos esparsos (inicia no vértice 1)
         if (no_origem > 0 && no_origem <= V){
             t_inicio = clock(); // Guarda o horário do início da execução
             Dijkstra dj (grafo);
 
             int nV = grafo->_numVertices();
-            printf("nV %d \n", nV);
-            dj.calculaDijkstra(0);
+            //printf("nV %d \n", nV);
+            dj.calculaDijkstra(no_origem);
 
             t_fim = clock(); // Guarda o horario do fim da execução
 
@@ -426,7 +413,7 @@ int main(){
             // Gera o arquivo de saída
             FILE *arquivoSaida;
 
-            arquivoSaida = fopen("saida-check_v5_s2.txt", "a");
+            arquivoSaida = abreArquivo('a', nomeArquivoSaida);
 
             // Imprime o tempo de execução
             fprintf(arquivoSaida, "\nTempo total de execução: %f segundo(s).\n\n", tempo);
@@ -437,11 +424,10 @@ int main(){
 
             fechaArquivo(arquivoSaida);
             printf("Cálculo completo. Arquivo de saída gerado");
+
         } else {
             printf("\nNó de origem inválido.");
-
         }
-
     } else if (strcmp(prefixo, "G") == 0){ // Construção do grafo para os casos direcionados (test-set1 e 2)
         while(!feof(arquivoEntrada)) {
             fscanf(arquivoEntrada, "%s %d %d %d" , &prefixo, &valor1, &valor2, &valor3);
@@ -453,25 +439,22 @@ int main(){
                 V = valor1;
             }
             if(strcmp(prefixo, "E") == 0){
-                printf("%s %d %d %d", prefixo, valor1, valor2, valor3);
-
                 Grafo::Aresta *a = new Grafo::Aresta (valor1, valor2, valor3);
-                grafo->insereAresta (a->_v1 (), a->_v2 (), a->_peso ());
+                grafo->insereAresta (a->_v1(), a->_v2(), a->_peso());
 
                 delete a;
             }
         }
-        no_origem = NULL;
         printf("\nDigite o nó de origem entre 0 e %d: ", V);
         scanf("%d", &no_origem);
 
         // Executa o Dijkstra para os grafos completos (inicia no vértice 0)
         if (no_origem >= 0 && no_origem < V){
-           t_inicio = clock(); // Guarda o horário do início da execução
-            Dijkstra dj (grafo);
+            t_inicio = clock(); // Guarda o horário do início da execução
+            Dijkstra dj(grafo);
 
             int nV = grafo->_numVertices();
-            printf("nV %d \n", nV);
+            //printf("nV %d \n", nV);
             dj.calculaDijkstra(0);
 
             t_fim = clock(); // Guarda o horario do fim da execução
@@ -481,7 +464,7 @@ int main(){
             // Gera o arquivo de saída
             FILE *arquivoSaida;
 
-            arquivoSaida = fopen("saida-check_v5_s2.txt", "a");
+            arquivoSaida = abreArquivo('a', nomeArquivoSaida);
 
             // Imprime o tempo de execução
             fprintf(arquivoSaida, "\nTempo total de execução: %f segundo(s).\n\n", tempo);

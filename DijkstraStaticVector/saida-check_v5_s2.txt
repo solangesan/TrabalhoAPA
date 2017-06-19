@@ -46,3 +46,43 @@ Origem: 0 	 Destino: 1 	 Distância: 5
 Origem: 0 	 Destino: 2 	 Distância: 4
 Origem: 0 	 Destino: 3 	 Distância: 26
 Origem: 0 	 Destino: 4 	 Distância: 32
+
+Tempo total de execução: 0.005512 segundo(s).
+
+Origem: 0 	 Destino: 0 	 Distância: 0
+Origem: 0 	 Destino: 1 	 Distância: 5
+Origem: 0 	 Destino: 2 	 Distância: 4
+Origem: 0 	 Destino: 3 	 Distância: 26
+Origem: 0 	 Destino: 4 	 Distância: 32
+
+Tempo total de execução: 0.005459 segundo(s).
+
+Origem: 0 	 Destino: 0 	 Distância: 0
+Origem: 0 	 Destino: 1 	 Distância: 5
+Origem: 0 	 Destino: 2 	 Distância: 4
+Origem: 0 	 Destino: 3 	 Distância: 26
+Origem: 0 	 Destino: 4 	 Distância: 32
+
+Tempo total de execução: 0.005508 segundo(s).
+
+Origem: 0 	 Destino: 0 	 Distância: 0
+Origem: 0 	 Destino: 1 	 Distância: 5
+Origem: 0 	 Destino: 2 	 Distância: 4
+Origem: 0 	 Destino: 3 	 Distância: 26
+Origem: 0 	 Destino: 4 	 Distância: 32
+
+Tempo total de execução: 0.005518 segundo(s).
+
+Origem: 0 	 Destino: 0 	 Distância: 0
+Origem: 0 	 Destino: 1 	 Distância: 5
+Origem: 0 	 Destino: 2 	 Distância: 4
+Origem: 0 	 Destino: 3 	 Distância: 26
+Origem: 0 	 Destino: 4 	 Distância: 32
+
+Tempo total de execução: 0.005439 segundo(s).
+
+Origem: 0 	 Destino: 0 	 Distância: 0
+Origem: 0 	 Destino: 1 	 Distância: 5
+Origem: 0 	 Destino: 2 	 Distância: 4
+Origem: 0 	 Destino: 3 	 Distância: 26
+Origem: 0 	 Destino: 4 	 Distância: 32
