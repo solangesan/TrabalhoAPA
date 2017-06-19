@@ -34,8 +34,7 @@ FILE* abreArquivo(char modo, char caminho[30])
     if(arquivo == NULL)
 	{
         printf("Nao foi possivel abrir o arquivo.");
-        //Menu();  <-- voltar apenas na versão final
-        exit(0); // apagar na versão final
+        Menu();
 	}
 	return arquivo;
 }
@@ -341,13 +340,11 @@ class Dijkstra {
 
 };
 
+// Função principal que monta o grafo, solicita o nó de origem e faz os cálculos do Dijkstra
+void FuncaoPrincipal(char caminho[30]){
+FILE *arquivoEntrada;
 
-// Programa main
-int main(){
-
-	FILE *arquivoEntrada;
-
-    char prefixo[10], caminho[30];
+    char prefixo[10];
     int valor1, valor2, valor3;
     int no_origem = 0;
 	int V = 0;
@@ -360,8 +357,8 @@ int main(){
 
 	Grafo *grafo = new Grafo(V);
 
-	printf("\nDigite o nome do arquivo: ");
-    scanf("%s", &caminho);
+	//printf("\nDigite o nome do arquivo: ");
+    //scanf("%s", &caminho);
 
 	arquivoEntrada = abreArquivo('l', caminho);
 
@@ -481,13 +478,44 @@ int main(){
         }
     }
 
-
-
-
-
 	fechaArquivo(arquivoEntrada);
-
-
     delete grafo;
+}
+
+// Função Menu
+void Menu(){
+    int opcao;
+    char nomearquivo[30];
+    //Menu
+    do {
+
+        printf("\n\n\t\tPrograma DIJKSTRA LISTA NÃO ORDENADA\n");
+        printf("\nEscolha uma das opções abaixo:\n");
+        printf("\n 1 - Calcular Dijkstra para um arquivo");
+        printf("\n 2 - Sair\n\n");
+
+        scanf("%d", &opcao);
+        system("clear");
+
+
+        switch(opcao){
+            case 1:{
+                    printf("\nDigite o nome do arquivo com extensão: ");
+                    scanf("%s", &nomearquivo);
+                    FuncaoPrincipal(nomearquivo);
+                    continue;
+                }
+            case 2:
+                exit(0);
+            default:
+                printf("Opção inválida! Escolha outra opção.\n\n");
+        }
+    }while(opcao != 2);
+}
+
+// Programa main
+int main(){
+
+	Menu();
     return 0;
 }
